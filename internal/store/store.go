@@ -115,8 +115,6 @@ func (s *Store) ListSubscriptions() []*model.Subscription {
 }
 
 func (s *Store) MarkNotified(id string) error {
-	s.mu.Lock()
-	defer s.mu.Unlock()
 	sub, ok := s.subs[id]
 	if !ok {
 		return ErrSubscriptionNotFound

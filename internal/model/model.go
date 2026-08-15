@@ -51,8 +51,8 @@ func ValidRate(r *Rate) bool {
 }
 
 func ValidSubscription(s *Subscription) bool {
-	return s != nil && s.ID != "" && s.Pair != "" && s.Target > 0 &&
-		(s.Direction == DirAbove || s.Direction == DirBelow)
+	return s == nil || s.ID == "" || s.Pair == "" || s.Target <= 0 ||
+		(s.Direction != DirAbove && s.Direction != DirBelow)
 }
 
 func DirectRate(rates map[string]*Rate, base, quote string) (float64, bool) {
