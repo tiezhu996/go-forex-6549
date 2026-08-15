@@ -113,13 +113,5 @@ func (svc *Service) EvaluateSub(sub *model.Subscription) (bool, error) {
 func (svc *Service) SubscriptionBatches() [][]*model.Subscription {
 	subs := svc.store.ListSubscriptions()
 	model.SortSubscriptions(subs)
-	out := make([][]*model.Subscription, 0)
-	for i := 0; i < len(subs); i += svc.batchSize {
-		end := i + svc.batchSize
-		if end > len(subs) {
-			end = len(subs)
-		}
-		out = append(out, subs[i:end])
-	}
-	return out
+	return model.BuildSubscriptionBatches(subs, svc.batchSize)
 }
