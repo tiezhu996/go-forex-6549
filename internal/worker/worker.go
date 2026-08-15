@@ -29,6 +29,10 @@ func (p *Pool) Check(ctx context.Context) model.Summary {
 	go func() {
 		defer close(ch)
 		for _, b := range batches {
+			if ctx.Err() != nil {
+				close(ch)
+				return
+			}
 			select {
 			case <-ctx.Done():
 				return
