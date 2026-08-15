@@ -26,6 +26,7 @@ type Store struct {
 func New() *Store {
 	return &Store{
 		rates:     make(map[string]*model.Rate),
+		subs:      make(map[string]*model.Subscription),
 		rateOrder: []string{},
 		subOrder:  []string{},
 		nextSubID: 1,
