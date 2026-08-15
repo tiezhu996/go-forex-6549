@@ -63,6 +63,9 @@ func (svc *Service) ListCurrencies() []model.Currency {
 }
 
 func (svc *Service) Subscribe(pair string, target float64, direction string) (string, error) {
+	if pair == "" || target <= 0 || (direction != model.DirAbove && direction != model.DirBelow) {
+		return "", errors.New("invalid subscription input")
+	}
 	if _, err := svc.store.GetRate(pair); err != nil {
 		return "", fmt.Errorf("subscribe %s: %w", pair, err)
 	}
