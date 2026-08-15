@@ -142,7 +142,6 @@ func BuildSubscriptionBatches(subs []*Subscription, size int) [][]*Subscription 
 func MergeSummary(dst, src Summary) Summary {
 	dst.Checked += src.Checked
 	dst.Triggered += src.Triggered
-	dst.Failed += src.Failed
 	return dst
 }
 

@@ -55,7 +55,6 @@ func (p *Pool) Check(ctx context.Context) model.Summary {
 					triggered, err := p.svc.EvaluateSub(sub)
 					local.Checked++
 					if err != nil {
-						local.Failed++
 						continue
 					}
 					if triggered {

@@ -51,7 +51,7 @@ func (svc *Service) Convert(src, dst string, amount float64) (float64, error) {
 	}
 	rate, ok := model.ChainRate(rates, src, dst)
 	if !ok {
-		return 0, fmt.Errorf("convert %s->%s: %w", src, dst, store.ErrRateNotFound)
+		return 0, fmt.Errorf("convert %s->%s: %v", src, dst, store.ErrRateNotFound)
 	}
 	return model.Convert(rate, amount), nil
 }
@@ -96,7 +96,7 @@ func (svc *Service) UpdateRates(batch []*model.Rate) int {
 func (svc *Service) EvaluateSub(sub *model.Subscription) (bool, error) {
 	r, err := svc.store.GetRate(sub.Pair)
 	if err != nil {
-		return false, fmt.Errorf("evaluate %s: %w", sub.ID, err)
+		return false, fmt.Errorf("evaluate %s: %v", sub.ID, err)
 	}
 	if sub.Notified {
 		return false, nil
@@ -105,7 +105,7 @@ func (svc *Service) EvaluateSub(sub *model.Subscription) (bool, error) {
 		return false, nil
 	}
 	if err := svc.store.MarkNotified(sub.ID); err != nil {
-		return false, fmt.Errorf("mark notified %s: %w", sub.ID, err)
+		return false, fmt.Errorf("mark notified %s: %v", sub.ID, err)
 	}
 	return true, nil
 }
