@@ -76,9 +76,7 @@ func (s *Store) ListRates() []*model.Rate {
 func (s *Store) RatePairs() []string {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	out := make([]string, len(s.rateOrder))
-	copy(out, s.rateOrder)
-	return out
+	return s.rateOrder
 }
 
 func (s *Store) AddSubscription(sub *model.Subscription) (string, error) {

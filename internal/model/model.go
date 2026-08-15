@@ -132,9 +132,7 @@ func BuildSubscriptionBatches(subs []*Subscription, size int) [][]*Subscription 
 		if end > len(subs) {
 			end = len(subs)
 		}
-		b := make([]*Subscription, end-i)
-		copy(b, subs[i:end])
-		out = append(out, b)
+		out = append(out, subs[i:end])
 	}
 	return out
 }

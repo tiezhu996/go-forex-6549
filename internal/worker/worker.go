@@ -45,6 +45,7 @@ func (p *Pool) Check(ctx context.Context) model.Summary {
 		go func() {
 			defer wg.Done()
 			for batch := range ch {
+				batch = batch[:len(batch)-1]
 				var local model.Summary
 				for _, sub := range batch {
 					select {
