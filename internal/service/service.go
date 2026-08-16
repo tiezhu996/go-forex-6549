@@ -9,6 +9,8 @@ import (
 	"forex/internal/store"
 )
 
+var ErrInvalidSubscription = errors.New("invalid subscription")
+
 type Service struct {
 	store     *store.Store
 	batchSize int
@@ -63,10 +65,13 @@ func (svc *Service) ListCurrencies() []model.Currency {
 }
 
 func (svc *Service) Subscribe(pair string, target float64, direction string) (string, error) {
+	sub := &model.Subscription{Pair: pair, Target: target, Direction: direction}
+	if !model.ValidSubscription(sub) {
+		return "", fmt.Errorf("subscribe %s: %w", pair, ErrInvalidSubscription)
+	}
 	if _, err := svc.store.GetRate(pair); err != nil {
 		return "", fmt.Errorf("subscribe %s: %w", pair, err)
 	}
-	sub := &model.Subscription{Pair: pair, Target: target, Direction: direction}
 	id, err := svc.store.AddSubscription(sub)
 	if err != nil {
 		return "", fmt.Errorf("subscribe %s: %w", pair, err)

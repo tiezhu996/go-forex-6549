@@ -37,14 +37,20 @@ func (p *Pool) Check(ctx context.Context) model.Summary {
 		}
 	}()
 
-	var sum model.Summary
+	var (
+		mu  sync.Mutex
+		sum model.Summary
+	)
 
 	for i := 0; i < p.workers; i++ {
+		wg.Add(1)
 		go func() {
-			wg.Add(1)
 			defer wg.Done()
+			var local model.Summary
 			for batch := range ch {
-				var local model.Summary
+				if ctx.Err() != nil {
+					continue
+				}
 				for _, sub := range batch {
 					triggered, err := p.svc.EvaluateSub(sub)
 					local.Checked++
@@ -56,8 +62,10 @@ func (p *Pool) Check(ctx context.Context) model.Summary {
 						local.Triggered++
 					}
 				}
-				sum = model.MergeSummary(sum, local)
 			}
+			mu.Lock()
+			sum = model.MergeSummary(sum, local)
+			mu.Unlock()
 		}()
 	}
 
