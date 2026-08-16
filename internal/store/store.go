@@ -2,7 +2,6 @@ package store
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"sync"
 
@@ -59,7 +58,7 @@ func (s *Store) GetRate(pair string) (*model.Rate, error) {
 	defer s.mu.RUnlock()
 	r, ok := s.rates[pair]
 	if !ok {
-		return nil, fmt.Errorf("rate %s not found", pair)
+		return nil, ErrRateNotFound
 	}
 	return r, nil
 }
@@ -120,7 +119,7 @@ func (s *Store) MarkNotified(id string) error {
 	defer s.mu.Unlock()
 	sub, ok := s.subs[id]
 	if !ok {
-		return fmt.Errorf("subscription %s not found", id)
+		return ErrSubscriptionNotFound
 	}
 	sub.Triggered = true
 	sub.Notified = true
